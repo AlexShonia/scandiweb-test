@@ -1,0 +1,3 @@
+    see how some parts work
+    write your own backend, test with postman
+    connect to react frontend
