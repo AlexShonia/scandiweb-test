@@ -8,11 +8,15 @@ class Database
 {
     protected $pdo;
 
-    public function __construct($connection_string, $user, $password)
+    public function __construct(string $dsn, string $user, string $password)
     {
-        $pdo = new PDO;
-
+        $this->pdo = new PDO($dsn, $user, $password);
+        $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 
+    public function query(string $sql)
+    {
+        $this->pdo->exec($sql);
+    }
 
 }

@@ -6,19 +6,19 @@ $dotenv->load();
 
 $dbhost = $_ENV['DB_HOST'];
 $dbuser = $_ENV['DB_USER'];
-$port = $_ENV['DB_PORT'];
-$password = $_ENV['DB_PASSWORD'];
+$dbport = $_ENV['DB_PORT'];
+$dbpass = $_ENV['DB_PASSWORD'];
 $dbname = $_ENV['DB_NAME'];
-$dsn = "mysql:host=$dbhost";
+$dsn = "mysql:host=$dbhost;port=$dbport";
 
 try {
-    $conn = new PDO($dsn, $dbuser, $password);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo = new PDO($dsn, $dbuser, $dbpass);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $sql = "CREATE DATABASE IF NOT EXISTS productsdb";
-    $conn->exec($sql);
-    $sql = "USE productsdb";
-    $conn->exec($sql);
+    $sql = "CREATE DATABASE IF NOT EXISTS $dbname";
+    $pdo->exec($sql);
+    $sql = "USE $dbname";
+    $pdo->exec($sql);
 
     $sql = "CREATE TABLE IF NOT EXISTS products (
                 sku varchar(255) PRIMARY KEY,
@@ -27,7 +27,7 @@ try {
                 product_type varchar(255) NOT NULL,
                 product_value varchar(255) NOT NULL
     )";
-    $conn->exec($sql);
+    $pdo->exec($sql);
 
     echo "migration successful";
 
