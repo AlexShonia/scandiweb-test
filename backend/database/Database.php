@@ -16,7 +16,8 @@ class Database
 
     public function query(string $sql)
     {
-        $this->pdo->exec($sql);
+        $result = $this->pdo->query($sql);
+        return $result->fetchAll(PDO::FETCH_ASSOC);
     }
 
 }
