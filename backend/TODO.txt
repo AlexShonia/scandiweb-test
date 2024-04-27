@@ -1,4 +1,7 @@
-    see how some parts work
-    write your own backend, test with postman
-        create app and router    
-    connect to react frontend
+see how some parts work
+write your own backend, test with postman
+    create app and router    
++ connect to react frontend
++ add home page
+add add page
+add delete funcitonality
