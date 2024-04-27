@@ -1,7 +1,20 @@
 <?php
-header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
-header('Access-Control-Allow-Credentials: true');
-header('Access-Control-Max-Age: 86400');    // cache for 1 day
+
+$allowedOrigins = [
+    'http://127.0.0.1:5173',
+];
+
+if (in_array($_SERVER['HTTP_ORIGIN'], $allowedOrigins)) {
+    header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
+    header('Access-Control-Allow-Methods: PUT, GET, POST, DELETE, OPTIONS');
+    header('Access-Control-Allow-Headers: X-Requested-With,Authorization,Content-Type');
+    header('Access-Control-Allow-Credentials: true');
+    header('Access-Control-Max-Age: 86400');
+} else {
+    http_response_code(403);
+    exit('Access Forbidden');
+}
+
 use app\core\Application;
 
 require_once __DIR__ . "/../vendor/autoload.php";

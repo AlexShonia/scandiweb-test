@@ -17,12 +17,13 @@ function App() {
       }
     }
   )
-  const mhm = useMutation(
-    "delete products",
+
+  const massDelete = useMutation(
+    "mass delete",
     async () => {
       const response = await axiosClient.post("/delete",
         {
-          checked
+          "skuArr": checked
         },
         {
           headers: {
@@ -50,7 +51,7 @@ function App() {
   }
 
   function handleDelete() {
-
+    massDelete.mutate();
   }
 
   useEffect(() => {
@@ -63,7 +64,7 @@ function App() {
         <h2>My Products</h2>
         <div className='w-50 d-flex justify-content-end align-items-center gap-4'>
           <button style={{ width: "30%" }} className='h-75 border rounded-2 bg-success text-white fs-5'>Add</button>
-          <button style={{ width: "30%" }} className='h-75 border rounded-2 bg-danger text-white fs-5'>Mass Delete</button>
+          <button onClick={handleDelete} style={{ width: "30%" }} className='h-75 border rounded-2 bg-danger text-white fs-5'>Mass Delete</button>
         </div>
       </div>
       <main className='d-flex gap-3 mt-3 border-top border-2'>
