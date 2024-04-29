@@ -1,19 +1,20 @@
 <?php
 
-$allowedOrigins = [
-    'http://127.0.0.1:5173',
-];
+// $allowedOrigins = [
+//     'http://127.0.0.1:5173',
+//     'http://localhost:8000/',
+// ];
 
-if (in_array($_SERVER['HTTP_ORIGIN'], $allowedOrigins)) {
-    header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
-    header('Access-Control-Allow-Methods: PUT, GET, POST, DELETE, OPTIONS');
-    header('Access-Control-Allow-Headers: X-Requested-With,Authorization,Content-Type');
-    header('Access-Control-Allow-Credentials: true');
-    header('Access-Control-Max-Age: 86400');
-} else {
-    http_response_code(403);
-    exit('Access Forbidden');
-}
+// if (in_array($_SERVER['HTTP_ORIGIN'], $allowedOrigins)) {
+header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
+header('Access-Control-Allow-Methods: PUT, GET, POST, DELETE, OPTIONS');
+header('Access-Control-Allow-Headers: X-Requested-With,Authorization,Content-Type');
+header('Access-Control-Allow-Credentials: true');
+header('Access-Control-Max-Age: 86400');
+// } else {
+//     http_response_code(403);
+//     exit('Access Forbidden');
+// }
 
 use app\core\Application;
 
@@ -42,11 +43,14 @@ $app->router->get("/", function () {
 });
 
 $app->router->post("/add", function () {
-    $sku = $_POST['sku'];
-    $name = $_POST['name'];
-    $price = $_POST['price'];
-    $productType = $_POST['productType'];
-    $productValue = $_POST['productValue'];
+    $productData = file_get_contents("php://input");
+    $productData = json_decode($productData);
+
+    $sku = $productData->sku;
+    $name = $productData->name;
+    $price = $productData->price;
+    $productType = $productData->productType;
+    $productValue = $productData->productValue;
 
     $res = Application::$db->query(
         "INSERT INTO products
@@ -61,7 +65,6 @@ $app->router->post("/add", function () {
 $app->router->post("/delete", function () {
     $skuArr = file_get_contents("php://input");
     $skuArr = json_decode($skuArr);
-    var_dump($skuArr->skuArr[2]);
 
     for ($i = 0; $i < count($skuArr->skuArr); $i++) {
         Application::$db->query(
