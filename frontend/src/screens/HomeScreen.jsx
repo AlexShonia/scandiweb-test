@@ -38,6 +38,7 @@ function HomeScreen() {
         {
             onSuccess: () => {
                 refetch();
+                setChecked([]);
             }
         }
     )

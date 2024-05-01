@@ -17,6 +17,8 @@ header('Access-Control-Max-Age: 86400');
 // }
 
 use app\core\Application;
+use app\models\Product;
+use app\models\ProductDao;
 
 require_once __DIR__ . "/../vendor/autoload.php";
 
@@ -34,43 +36,23 @@ $config = [
 $app = new Application($config);
 
 $app->router->get("/", function () {
-    $res = Application::$db->query(
-        "SELECT * FROM products;"
-    );
-    $jsonResponse = json_encode($res);
-
-    return $jsonResponse;
+    $products = ProductDao::getAll();
+    return json_encode($products);
 });
 
 $app->router->post("/add", function () {
-    $productData = file_get_contents("php://input");
-    $productData = json_decode($productData);
+    $productData = json_decode(file_get_contents("php://input"));
 
-    $sku = $productData->sku;
-    $name = $productData->name;
-    $price = $productData->price;
-    $productType = $productData->productType;
-    $productValue = $productData->productValue;
-
-    $res = Application::$db->query(
-        "INSERT INTO products
-        (sku, name, price, product_type, product_value)
-        VALUES ($sku, '$name', $price, '$productType', '$productValue');"
-    );
-    $jsonResponse = json_encode($res);
-
-    return $jsonResponse;
+    $product = new Product($productData->sku, $productData->name, $productData->price, $productData->productType, $productData->productValue);
+    //TODO: return status code instead of this
+    return $product->save();
 });
 
 $app->router->post("/delete", function () {
-    $skuArr = file_get_contents("php://input");
-    $skuArr = json_decode($skuArr);
+    $skuArray = json_decode(file_get_contents("php://input"));
 
-    for ($i = 0; $i < count($skuArr->skuArr); $i++) {
-        Application::$db->query(
-            "DELETE FROM products
-             WHERE sku = " . $skuArr->skuArr[$i] . ";"
-        );
+    for ($i = 0; $i < count($skuArray->skuArr); $i++) {
+        ProductDao::get($skuArray->skuArr[$i])->delete();
     }
 
     return "Deleted";

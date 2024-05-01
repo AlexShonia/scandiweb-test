@@ -1,7 +1,14 @@
 see how some parts work
 write your own backend, test with postman
     create app and router    
+    query function should be less prone to injections
+        dont directly add variabbles in sql queries
+    return status codes
+    add request class
+
 + connect to react frontend
 + add home page
-add add page
-add delete funcitonality
++ add add page
++ add delete funcitonality
+why have getters and setters if properties are public anyway?
+why do we get product object and delete in productDao and not just delete straight up?

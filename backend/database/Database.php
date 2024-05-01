@@ -14,9 +14,10 @@ class Database
         $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 
-    public function query(string $sql)
+    public function query(string $sql, array $args)
     {
-        $result = $this->pdo->query($sql);
+        $result = $this->pdo->prepare($sql);
+        $result->execute($args);
         return $result->fetchAll(PDO::FETCH_ASSOC);
     }
 
