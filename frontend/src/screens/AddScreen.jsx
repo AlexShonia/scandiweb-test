@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { ArrowLeftIcon } from "@heroicons/react/20/solid"
+import { useNavigate } from 'react-router-dom'
 import { useMutation } from "react-query";
 import { axiosClient } from '../axiosConfig';
 import {
+    Alert,
+    Button,
     Form,
 } from "react-bootstrap";
+import Loader from '../components/Loader';
 
 function AddScreen() {
     const [sku, setSku] = useState();
@@ -43,7 +45,7 @@ function AddScreen() {
         },
         {
             onSuccess: () => {
-                navigate("/")
+                navigate('/')
             },
             onError: (error) => {
                 console.log(error);
@@ -60,6 +62,11 @@ function AddScreen() {
 
         addProduct.mutate()
     }
+
+    function handleCancel() {
+        navigate('/')
+    }
+
     useEffect(() => {
         if (productType === 'DVD') {
             setProductValue(size);
@@ -71,10 +78,18 @@ function AddScreen() {
     }, [size, height, width, length, weight])
 
     return (
-        <div className='mt-3'>
-            <Link to={"/"}><ArrowLeftIcon width={20} />Back</Link>
-            <main className='d-flex flex-column gap-3 pt-3' style={{ width: "90vw" }}>
-                <form id='product_form' onSubmit={handleSubmit}>
+        <>
+            <div className='pt-5 d-flex justify-content-between' style={{ height: "15vh" }}>
+                <h2 className='align-content-center'>Product Add</h2>
+                <div className='w-50 d-flex justify-content-end align-items-center gap-3'>
+                    <Button variant='success' size='lg' onClick={handleSubmit}>Save</Button>
+                    <Button variant='danger' size='lg' onClick={handleCancel}>Cancel</Button>
+                </div>
+            </div>
+            {addProduct.isLoading && <Loader />}
+            {addProduct.isError && <Alert variant='danger'>{addProduct.error}</Alert>}
+            <main className='d-flex flex-column gap-3 mt-3 border-top border-2' style={{ width: "90vw" }}>
+                <form id='product_form' className='pt-5'>
                     <label className='form-label'>Enter SKU</label>
                     <input
                         id='sku'
@@ -106,16 +121,24 @@ function AddScreen() {
                         onChange={(e) => setPrice(e.target.value)}
                     />
                     {errorMessages?.price && <div className='alert-danger w-25'>{errorMessages.price}</div>}
-                    <Form.Select
-                        id='productType'
-                        size="sm"
-                        style={{ width: "10%" }}
-                        onChange={(e) => setProductType(e.target.value)}
-                    >
-                        <option value='DVD'>DVD</option>
-                        <option value='Furniture'>Furniture</option>
-                        <option value='Book'>Book</option>
-                    </Form.Select>
+                    <div className='w-25 d-flex gap-3'>
+                        <label className='align-content-center'>
+                            Product Type:
+                        </label>
+                        <div>
+                            <Form.Select
+                                id='productType'
+                                className='my-3 w-100'
+                                size="md"
+                                style={{ width: "10%" }}
+                                onChange={(e) => setProductType(e.target.value)}
+                            >
+                                <option value='DVD'>DVD</option>
+                                <option value='Furniture'>Furniture</option>
+                                <option value='Book'>Book</option>
+                            </Form.Select>
+                        </div>
+                    </div>
                     {/* ADD Selected Type to the right */}
                     {productType === 'DVD' ? (
                         <>
@@ -179,10 +202,10 @@ function AddScreen() {
                             />
                         </>
                     ) : ("")}
-                    <button type='submit' className='mt-3 h-100 w-25 rounded-2 bg-success text-white fs-5'>Add product</button>
+                    {/* <button type='submit' className='mt-3 h-100 w-25 rounded-2 bg-success text-white fs-5'>Add product</button> */}
                 </form>
             </main>
-        </div>
+        </>
     )
 }
 
