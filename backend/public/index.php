@@ -44,7 +44,6 @@ $app->router->post("/add", function () {
     $productData = json_decode(file_get_contents("php://input"));
 
     $product = new Product($productData->sku, $productData->name, $productData->price, $productData->productType, $productData->productValue);
-    //TODO: return status code instead of this
     return $product->save();
 });
 
@@ -58,4 +57,5 @@ $app->router->post("/delete", function () {
     return "Deleted";
 });
 
-// $app->run();
+$app->run();
+

@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
 import { useQuery, useMutation } from "react-query";
 import { axiosClient } from '../axiosConfig';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { Button } from 'react-bootstrap';
 
 function HomeScreen() {
     const [products, setProducts] = useState([])
     const [checked, setChecked] = useState([])
+    const navigate = useNavigate();
     const { isLoading, error, refetch } = useQuery(
         "products",
         async () => {
@@ -19,7 +21,6 @@ function HomeScreen() {
         }
     )
 
-    //TODO: Use delete crud operation instead
     const massDelete = useMutation(
         "mass delete",
         async () => {
@@ -57,19 +58,17 @@ function HomeScreen() {
         massDelete.mutate();
     }
 
-    useEffect(() => {
-        console.log(checked);
-    }, [checked])
+    function handleAdd() {
+        navigate("/add")
+    }
 
     return (
         <>
             <div className='pt-5 d-flex justify-content-between' style={{ height: "15vh" }}>
-                <h2>My Products</h2>
-                <div className='w-50 d-flex justify-content-end align-items-center gap-4'>
-                    <Link to={"/add"} className='w-25 h-75 d-flex align-items-center'>
-                        <button className='h-100 w-100 rounded-2 bg-success text-white fs-5 '>Add</button>
-                    </Link>
-                    <button onClick={handleDelete} className='w-50 h-75 rounded-2 bg-danger text-white fs-5'>Mass Delete</button>
+                <h2 className='align-content-center'>My Products</h2>
+                <div className='w-50 d-flex justify-content-end align-items-center gap-3'>
+                    <Button variant='success' size='lg' onClick={handleAdd}>Add</Button>
+                    <Button variant='danger' size='lg' onClick={handleDelete}>Mass Delete</Button>
                 </div>
             </div>
             <main className='d-flex gap-3 mt-3 border-top border-2'>
@@ -77,7 +76,7 @@ function HomeScreen() {
                     {products.map((product) => (
                         <div key={product.sku} className='col-3 mt-4'>
                             <div className='border border-2 rounded-3 text-md-center py-4 bg-white'>
-                                <input type='checkbox' className='form-check-input' onClick={() => { handleCheck(product.sku) }} />
+                                <input type='checkbox' className='delete-checkbox form-check-input' onClick={() => { handleCheck(product.sku) }} />
                                 <h3>{product.sku}</h3>
                                 <h3>{product.name}</h3>
                                 <h4>{product.price}</h4>
