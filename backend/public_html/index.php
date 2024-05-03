@@ -1,8 +1,10 @@
 <?php
-
-// $allowedOrigins = [
-//     'http://127.0.0.1:5173',
-//     'http://localhost:8000/',
+//  $allowedOrigins = [
+//      'http://127.0.0.1:5173',
+//      'http://localhost:5173',
+//      'http://localhost:8000/',
+//      'https://scandiweb-test-gamma.vercel.app',
+//      'https://wearying-networks.000webhostapp.com/',
 // ];
 
 // if (in_array($_SERVER['HTTP_ORIGIN'], $allowedOrigins)) {
@@ -11,10 +13,10 @@ header('Access-Control-Allow-Methods: PUT, GET, POST, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: X-Requested-With,Authorization,Content-Type');
 header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Max-Age: 86400');
-// } else {
-//     http_response_code(403);
-//     exit('Access Forbidden');
-// }
+//  } else {
+//      http_response_code(403);
+//      exit('Access Forbidden');
+//  }
 
 use app\core\Application;
 use app\models\Product;
@@ -49,7 +51,6 @@ $app->router->post("/add", function () {
 
 $app->router->post("/delete", function () {
     $skuArray = json_decode(file_get_contents("php://input"));
-
     for ($i = 0; $i < count($skuArray->skuArr); $i++) {
         ProductDao::get($skuArray->skuArr[$i])->delete();
     }
