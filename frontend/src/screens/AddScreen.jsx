@@ -21,6 +21,7 @@ function AddScreen() {
     const [productType, setProductType] = useState('DVD');
     const [productValue, setProductValue] = useState();
     const [errorMessages, setErrorMessages] = useState({});
+    const [submitted, setSubmitted] = useState(false);
 
     const navigate = useNavigate();
 
@@ -47,20 +48,49 @@ function AddScreen() {
             onSuccess: () => {
                 navigate('/')
             },
-            onError: (error) => {
-                console.log(error);
-            }
         },
     )
+
+
+    function isEmpty(item, varName) {
+        if (!item) {
+            setErrorMessages((prev) => { return { ...prev, [varName]: 'Please, submit required data' } })
+        }
+    }
+
+    function isNumber(item, varName) {
+        if (Number.isNaN(Number(item))) {
+            setErrorMessages((prev) => { return { ...prev, [varName]: 'Please, provide the data of indicated type' } })
+        }
+    }
+
 
     function handleSubmit(e) {
         e.preventDefault();
 
-        if (Number.isNaN(Number(price))) {
-            setErrorMessages((prev) => { return { ...prev, price: 'Please, provide the data of indicated type' } })
+        isEmpty(sku, "sku");
+        isEmpty(name, "name");
+        isNumber(price, "price")
+        isEmpty(price, "price");
+
+        if (productType === 'DVD') {
+            isNumber(size, "size")
+            isEmpty(size, "size");
+        }
+        if (productType === 'Furniture') {
+            isNumber(height, "height")
+            isEmpty(height, "height");
+            isNumber(width, "width")
+            isEmpty(width, "width");
+            isNumber(length, "length")
+            isEmpty(length, "length");
         }
 
-        addProduct.mutate()
+        if (productType === 'Book') {
+            isNumber(weight, "weight")
+            isEmpty(weight, "weight");
+        }
+        setSubmitted(true);
     }
 
     function handleCancel() {
@@ -75,7 +105,16 @@ function AddScreen() {
         } else if (productType === 'Book') {
             setProductValue(weight);
         }
-    }, [size, height, width, length, weight])
+        console.log(errorMessages);
+        setErrorMessages({});
+    }, [sku, name, price, size, height, width, length, weight])
+
+    useEffect(() => {
+        if (submitted && errorMessages && Object.keys(errorMessages).length === 0) {
+            addProduct.mutate();
+        }
+        setSubmitted(false);
+    }, [submitted])
 
     return (
         <>
@@ -87,9 +126,9 @@ function AddScreen() {
                 </div>
             </div>
             {addProduct.isLoading && <Loader />}
-            {addProduct.isError && <Alert variant='danger'>{addProduct.error}</Alert>}
+            {addProduct.isError && <Alert variant='danger'>Something Went Wrong</Alert>}
             <main className='d-flex flex-column gap-3 mt-3 border-top border-2' style={{ width: "90vw" }}>
-                <form id='product_form' className='pt-5'>
+                <Form id='product_form' className='pt-5'>
                     <label className='form-label'>Enter SKU</label>
                     <input
                         id='sku'
@@ -101,6 +140,7 @@ function AddScreen() {
                         onChange={(e) => setSku(e.target.value)}
                     />
                     <label className='form-label'>Name of the Product</label>
+                    {errorMessages?.sku && <Alert variant='danger' size='sm' className='w-50'>{errorMessages.sku}</Alert>}
                     <input
                         id='name'
                         required
@@ -110,17 +150,19 @@ function AddScreen() {
                         value={name ? name : ""}
                         onChange={(e) => setName(e.target.value)}
                     />
+                    {errorMessages?.name && <Alert variant='danger' size='sm' className='w-50'>{errorMessages.name}</Alert>}
                     <label className='form-label'>Enter Price</label>
                     <input
                         id='price'
                         required
-                        type="text"
+                        type="number"
+                        step="0.01"
                         className='form-control w-25'
                         placeholder="Price"
                         value={price ? price : ""}
                         onChange={(e) => setPrice(e.target.value)}
                     />
-                    {errorMessages?.price && <div className='alert-danger w-25'>{errorMessages.price}</div>}
+                    {errorMessages?.price && <Alert variant='danger' size='sm' className='w-50'>{errorMessages.price}</Alert>}
                     <div className='w-25 d-flex gap-3'>
                         <label className='align-content-center'>
                             Product Type:
@@ -139,19 +181,19 @@ function AddScreen() {
                             </Form.Select>
                         </div>
                     </div>
-                    {/* ADD Selected Type to the right */}
                     {productType === 'DVD' ? (
                         <>
                             <label className='form-label'>Size (MB)</label>
                             <input
                                 id='size'
                                 required
-                                type="text"
+                                type="number"
                                 className='form-control w-25'
                                 placeholder="size"
                                 value={size ? size : ""}
                                 onChange={(e) => setSize(e.target.value)}
                             />
+                            {errorMessages?.size && <Alert variant='danger' size='sm' className='w-50'>{errorMessages.size}</Alert>}
                         </>
                     ) : ("")}
                     {productType === 'Furniture' ? (
@@ -160,32 +202,35 @@ function AddScreen() {
                             <input
                                 id='height'
                                 required
-                                type="text"
+                                type="number"
                                 className='form-control w-25'
-                                placeholder="size"
+                                placeholder="height"
                                 value={height ? height : ""}
                                 onChange={(e) => setHeight(e.target.value)}
                             />
+                            {errorMessages?.height && <Alert variant='danger' size='sm' className='w-50'>{errorMessages.height}</Alert>}
                             <label className='form-label'>Width (CM)</label>
                             <input
                                 id='width'
                                 required
-                                type="text"
+                                type="number"
                                 className='form-control w-25'
-                                placeholder="size"
+                                placeholder="width"
                                 value={width ? width : ""}
                                 onChange={(e) => setWidth(e.target.value)}
                             />
+                            {errorMessages?.width && <Alert variant='danger' size='sm' className='w-50'>{errorMessages.height}</Alert>}
                             <label className='form-label'>Length (CM)</label>
                             <input
                                 id='length'
                                 required
-                                type="text"
+                                type="number"
                                 className='form-control w-25'
-                                placeholder="size"
+                                placeholder="length"
                                 value={length ? length : ""}
                                 onChange={(e) => setLength(e.target.value)}
                             />
+                            {errorMessages?.length && <Alert variant='danger' size='sm' className='w-50'>{errorMessages.length}</Alert>}
                         </>
                     ) : ("")}
                     {productType === 'Book' ? (
@@ -194,16 +239,16 @@ function AddScreen() {
                             <input
                                 id='weight'
                                 required
-                                type="text"
+                                type="number"
                                 className='form-control w-25'
-                                placeholder="size"
+                                placeholder="weight"
                                 value={weight ? weight : ""}
                                 onChange={(e) => setWeight(e.target.value)}
                             />
+                            {errorMessages?.weight && <Alert variant='danger' size='sm' className='w-50'>{errorMessages.weight}</Alert>}
                         </>
                     ) : ("")}
-                    {/* <button type='submit' className='mt-3 h-100 w-25 rounded-2 bg-success text-white fs-5'>Add product</button> */}
-                </form>
+                </Form>
             </main>
         </>
     )
