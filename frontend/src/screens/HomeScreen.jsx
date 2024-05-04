@@ -68,8 +68,8 @@ function HomeScreen() {
             <div className='pt-5 d-flex justify-content-between' style={{ height: "15vh" }}>
                 <h2 className='align-content-center'>Product List</h2>
                 <div className='w-50 d-flex justify-content-end align-items-center gap-3'>
-                    <Button variant='success' size='lg' onClick={handleAdd}>Add</Button>
-                    <Button variant='danger' size='lg' onClick={handleDelete}>Mass Delete</Button>
+                    <Button variant='success' size='lg' onClick={handleAdd}>ADD</Button>
+                    <Button variant='danger' size='lg' onClick={handleDelete}>MASS DELETE</Button>
                 </div>
             </div>
             {isLoading && <Loader />}
