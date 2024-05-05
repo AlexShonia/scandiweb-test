@@ -60,7 +60,7 @@ function HomeScreen() {
     }
 
     function handleAdd() {
-        navigate("/add")
+        navigate("/add-product")
     }
 
     return (
@@ -85,9 +85,17 @@ function HomeScreen() {
                                     <Form.Check onClick={() => { handleCheck(product.sku) }} className='delete-checkbox' />
                                     <h3>{product.sku}</h3>
                                     <h3>{product.name}</h3>
-                                    <h4>{product.price}</h4>
+                                    <h4>{product.price}$</h4>
                                     <h4>{product.productType}</h4>
-                                    <h4>{product.productValue}</h4>
+                                    {product.productType === "DVD" ? (
+                                        <h4>Size: {product.productValue} MB</h4>
+                                    ) : ""}
+                                    {product.productType === "Book" ? (
+                                        <h4>Weight: {product.productValue} KG</h4>
+                                    ) : ""}
+                                    {product.productType === "Furniture" ? (
+                                        <h4>Dimensions: {product.productValue}</h4>
+                                    ) : ""}
                                 </div>
                             </Col>
                         ))}

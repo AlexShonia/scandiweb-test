@@ -9,7 +9,7 @@ write your own backend, test with postman
 
 + implement add product page ui funcitonality
 adhere to add product page example ui
-   see part about hints
+   +see part about hints
 + adhere task id specifications
 + make add product page more beauitiful
 + go through TODO-s inside code

@@ -105,7 +105,6 @@ function AddScreen() {
         } else if (productType === 'Book') {
             setProductValue(weight);
         }
-        console.log(errorMessages);
         setErrorMessages({});
     }, [sku, name, price, size, height, width, length, weight])
 
@@ -188,11 +187,12 @@ function AddScreen() {
                                 id='size'
                                 required
                                 type="number"
-                                className='form-control w-25'
+                                className='form-control w-25 mb-3'
                                 placeholder="size"
                                 value={size ? size : ""}
                                 onChange={(e) => setSize(e.target.value)}
                             />
+                            <strong>Please, provide size in MB</strong>
                             {errorMessages?.size && <Alert variant='danger' size='sm' className='w-50'>{errorMessages.size}</Alert>}
                         </>
                     ) : ("")}
@@ -225,11 +225,12 @@ function AddScreen() {
                                 id='length'
                                 required
                                 type="number"
-                                className='form-control w-25'
+                                className='form-control w-25 mb-3'
                                 placeholder="length"
                                 value={length ? length : ""}
                                 onChange={(e) => setLength(e.target.value)}
                             />
+                            <strong>Please, provide dimensions</strong>
                             {errorMessages?.length && <Alert variant='danger' size='sm' className='w-50'>{errorMessages.length}</Alert>}
                         </>
                     ) : ("")}
@@ -240,11 +241,12 @@ function AddScreen() {
                                 id='weight'
                                 required
                                 type="number"
-                                className='form-control w-25'
+                                className='form-control w-25 mb-3'
                                 placeholder="weight"
                                 value={weight ? weight : ""}
                                 onChange={(e) => setWeight(e.target.value)}
                             />
+                            <strong>Please, provide weight in KG</strong>
                             {errorMessages?.weight && <Alert variant='danger' size='sm' className='w-50'>{errorMessages.weight}</Alert>}
                         </>
                     ) : ("")}
